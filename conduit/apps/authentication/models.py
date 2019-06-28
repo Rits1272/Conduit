@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib.auth.models import(
     AbstractBaseUser, BaseUserManager, PermissionsMixin,
 )
+from conduit.apps.core.models import TimeStampedModel
 # AbstractBaseUser
 '''
 AbstractBaseUser only contains the authentication 
@@ -106,7 +107,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin, TimeStampedModel):
     # Each `User` needs a human-readable unique identifier that we can use to
     # represent the `User` in the UI. We want to index this column in the
     # database to improve lookup performance.
@@ -135,14 +136,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # false.
     is_staff = models.BooleanField(default=False)
 
-    # A timestamp representing when this object was created
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    # The auto_now_add will set the timezone.now() only when 
-    # the instance is created, and auto_now will update the 
-    # field everytime the save method is called.
-    updated_at = models.DateTimeField(auto_now=True)
-
+  
     # More fields required by Django when specifying a custom user model.
 
     # The `USERNAME_FIELD` property tells us which field we will use to log in.
@@ -200,3 +194,5 @@ class User(AbstractBaseUser, PermissionsMixin):
         # HS256 is the hashing algorithm.
 
         return token.decode('utf-8')
+
+
