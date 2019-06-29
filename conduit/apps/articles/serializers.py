@@ -10,6 +10,11 @@ class ArticleSerializer(serializers.ModelSerializer):
     description = serializers.CharField(required=False)
     slug = serializers.SlugField(required=False)
 
+    favourited = serializers.SerializerMethodField()
+    favouritesCount = serializers.SerializerMethodField(
+            method_name = 'get_favourites_count'
+        )
+
     # Django REST Framework makes it possible to create a read-only field that
     # gets its value by calling a function. In this case, the client expects
     # `created_at` to be called `createdAt` and `updated_at` to be `updatedAt`.
@@ -28,6 +33,8 @@ class ArticleSerializer(serializers.ModelSerializer):
             'slug',
             'title',
             'updatedAt',
+            'favourited',
+            'favouritesCount',
         )
 
     def create(self, validated_data):
@@ -39,6 +46,20 @@ class ArticleSerializer(serializers.ModelSerializer):
         return instance.created_at.isoformat()
 
     def get_updated_at(self, instance):
+        return instance.updated_at.isoformat()
+
+    def get_favourite(self, instance):
+        request = self.context.get('request', None)
+
+        if request is None:
+            return False
+
+        if not request.user.is_authenticated:
+            return False
+
+        return request.user.profile.has_favourited(instance)
+
+    def get_favourites_count(self, instance):
         return instance.updated_at.isoformat()
 
 

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ArticleViewSet, CommentsListCreateAPIView, CommentsDestroyAPIView
+from .views import (ArticleViewSet, CommentsListCreateAPIView, CommentsDestroyAPIView, ArticlesFavoriteAPIView)
 
 router = DefaultRouter(trailing_slash=False)
 router.register(r'articles', ArticleViewSet)
@@ -16,4 +16,6 @@ urlpatterns = [
         'articles/<slug:article_slug>/comments/<int:comment_pk>',
         CommentsDestroyAPIView.as_view()
         ),
+	path('articles/<slug:article_slug>/favorite',
+      ArticlesFavoriteAPIView.as_view()),
 ]
