@@ -11,6 +11,8 @@ byte stream that can be served to the client.
 
 class UserJSONRenderer(ConduitJSONRenderer):
     object_label = 'user'
+    pagination_object_label = 'profiles'
+    pagination_count_label = 'profilesCount'
 
     def render(self, data, media_type=None, renderer_context=None):
        
